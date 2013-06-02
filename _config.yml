@@ -1,5 +1,5 @@
 auto: true
 markdown: rdiscount
 permalink: /:title
-url: http://localhost:4000
+url: http://fxthomas.github.io/android-plugin/
 rdiscount extensions: [smart]
