@@ -7,7 +7,7 @@ subtitle: Creating a simple project from scratch
 **Welcome to SBT-Android!**
 
 The following tutorial is aimed at people who want to discover Scala on
-Android. Since Android apps rely heavily on Java, other languages targetting
+Android. Since Android apps rely heavily on Java, other languages targeting
 the Java Virtual Machine can also be used on Android, and among them is Scala.
 
 [Scala](http://www.scala-lang.org) is a functional, strongly-typed language that brings quite a number of
@@ -55,3 +55,202 @@ The basic requirements are :
 
     - Alternatively, you can download the archive, unzip it and run the SDK
       installer directly
+
+After installing them, you should make sure you can run the `sbt` command, as
+well as install and configure at least one Android SDK platform. The latter is
+covered by the Android documentation, and is not different in SBT-Android.
+
+You might have to set an environment variable called `ANDROID_HOME` pointing to
+where your SDK is located, SBT will tell you if it can't find it.
+
+# Creating a project from scratch
+
+To better understand how things work, we're going to create a project entirely
+from scratch.
+
+Later, you can just clone a Git repository or use
+[Giter8](https://github.com/n8han/giter8) template projects.  If you want to
+play with it right now, clone
+[fxthomas/android-scratch](https://github.com/fxthomas/android-scratch.git) and
+skip to the next section.
+
+So, without further ado, open a Terminal, and create the directory structure :
+
+```bash
+mkdir scratch                  # Create the project directory
+cd scratch                     # Change to the project directory
+mkdir project                  # Project configuration
+mkdir -p src/main/scala        # Scala sources
+mkdir -p src/main/res/layout   # Layout resources
+touch build.sbt                # Build configuration
+touch project/plugins.sbt      # SBT Plugins
+```
+
+If you already have an existing source for some project following the standard
+Android Ant layout, here are the corresponding directories for SBT :
+
+  * Put your Java sources in `src/main/java`
+  * Put your Scala sources in `src/main/scala`
+  * Put your resources in `src/main/res`
+  * Put your assets in `src/main/assets`
+  * Put your JAR libraries in `lib` _(SBT will automatically add them to the classpath)_
+  * Put your native (`.so`) libraries in `src/main/libs`
+  * Put your manifest in `src/main/AndroidManifest.xml`
+
+Then, you may add the Android plugin in `project/plugins.sbt` :
+
+```scala
+addSbtPlugin("org.scala-sbt" % "sbt-android-plugin" % "0.7-SNAPSHOT")
+```
+
+Add some information about your app in `build.sbt` :
+
+_(Note: Having one line between each setting is required by the SBT syntax)_ :
+
+```scala
+// Include the Android plugin
+androidDefault
+
+// Name of your app
+name := "Scratch"
+
+// Version of your app
+version := "0.1"
+
+// Version number of your app
+versionCode := 0
+
+// Version of Scala
+scalaVersion := "2.10.1"
+
+// Version of the Android platform SDK
+platformName := "android-16"
+```
+
+This is enough for SBT. You can now add the Android manifest file in
+`src/main/AndroidManifest.xml` :
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.scratch"
+    android:versionCode="0"
+    android:versionName="0.1">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16"/>
+
+    <application
+        android:label="Scratch"
+        android:icon="@drawable/android:star_big_on"
+        android:theme="@android:style/Theme.Holo.Light"
+        android:debuggable="true">
+
+        <activity
+          android:label="Scratch"
+          android:name=".ScratchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+```
+
+Add a layout file to describe the user interface :
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+
+  <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</LinearLayout>
+```
+
+And, finally, display "Hello, world!" on the main activity :
+
+```scala
+package com.scratch
+
+import android.app.Activity
+import android.os.Bundle
+
+class ScratchActivity extends Activity with TypedActivity {
+  override def onCreate(bundle: Bundle) {
+    super.onCreate(bundle)
+    setContentView(R.layout.main)
+    findView(TR.textview).setText("hello, world!")
+  }
+}
+```
+
+You might wonder what `TypedActivity`, `findView` and `TR` are, and we'll see
+that later when we see [Typed Activities](). Other than that, it's very similar to the Java version, which you can see here :
+
+```java
+package com.scratch;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.TextView;
+
+class ScratchActivity extends Activity {
+  @Override
+  public void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
+    setContentView(R.layout.main);
+    ((TextView)findView(R.textview)).setText("hello, world!");
+  }
+}
+```
+
+# Building the project
+
+Now that we've created our first project, we can of course build it. Start a
+SBT console by running `sbt` in a terminal :
+
+```
+$ sbt
+[info] Loading project definition from /Users/fx/Documents/Projects/android-scratch/project
+[info] Updating {file:/Users/fx/Documents/Projects/android-scratch/project/}default-b61a5b...
+[info] Resolving org.scala-sbt#precompiled-2_10_0;0.12.2 ...
+[info] Done updating.
+[info] Set current project to Scratch (in build file:/Users/fx/Documents/Projects/android-scratch/)
+>
+```
+
+It will automatically fetch and prepare dependencies and give you a nice prompt
+where you can type in commands and inspect the configuration. For now, let's
+type the `apk` command to package our application :
+
+```
+> apk
+[info] Generated /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/src_managed/main/AndroidManifest.xml
+[info] Running AAPT for package com.scratch
+[info] Wrote /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/src_managed/main/scala/com/scratch/TR.scala
+[info] Compiling 2 Scala sources and 2 Java sources to /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/classes...
+[info] Executing Proguard (configuration written to /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/src_managed/main/proguard.txt)
+ProGuard, version 4.8
+ProGuard is released under the GNU General Public License. You therefore
+...
+Preparing output jar [/Users/fx/Documents/Projects/android-scratch/target/classes-scratch-compile-0.1.min.jar]
+  Copying resources from program directory [/Users/fx/Documents/Projects/android-scratch/target/scala-2.10/classes]
+  Copying resources from program jar [/Users/fx/.sbt/boot/scala-2.10.1/lib/scala-library.jar] (filtered)
+[info] Dexing /Users/fx/Documents/Projects/android-scratch/target/classes-scratch-compile-0.1.dex
+[info] Packaging /Users/fx/Documents/Projects/android-scratch/target/scratch-compile-0.1.apk
+[success] Total time: 32 s, completed Jun 2, 2013 5:00:22 PM
+>
+```
+
+Our app is now packaged at `target/scratch-compile-0.1.apk`. Isn't that great?
+
+If you have an emulator running or a connected device, just run `start` to
+start the app, which will automatically build a package, upload it to your
+device and run the app!
