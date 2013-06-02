@@ -15,9 +15,11 @@ handy features for app development, and this tutorial will try to list a few of
 them.
 
 Scala is quite close to Java, and you can freely mix Java and Scala code if you
-wish. You don't really need to know Scala or SBT ([_Simple Build Tool_](http://www.scala-sbt.org), which we
-use to build Scala apps) to follow this tutorial, so we'll try to explain the
-most commonly-used commands and features.
+wish. Although it's recommended you at least know a little bit of Scala before
+starting, you don't really need to know Scala or SBT ([_Simple Build
+Tool_](http://www.scala-sbt.org), which we use to build Scala apps) to follow
+this tutorial, so we'll try to explain the most commonly-used commands and
+features.
 
 If you find something unclear or lacking, the whole tutorial is written in
 Markdown and [hosted on
