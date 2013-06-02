@@ -3,3 +3,5 @@ markdown: redcarpet
 permalink: /:title
 url: http://fxthomas.github.io/android-plugin/
 rdiscount extensions: [smart]
+redcarpet:
+  extensions: ["with_toc_data"]
