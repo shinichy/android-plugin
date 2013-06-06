@@ -1,11 +1,11 @@
 ---
 layout: post
-title: 2. Using Scala
+title: Annex A. Using Scala
 subtitle: Useful features for Scala on Android
 ---
 
-Now that we've got our first app up and running, this section will explore how
-Scala helps Android development.
+This section will explore how Scala helps Android development. For a better
+understanding, go to the [Scala website](http://www.scala-lang.org).
 
 # General language features
 

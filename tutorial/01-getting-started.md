@@ -230,10 +230,11 @@ $ sbt
 
 It will automatically fetch and prepare dependencies and give you a nice prompt
 where you can type in commands and inspect the configuration. For now, let's
-type the `apk` command to package our application :
+type the `start` command to package our application and start it on a connected
+device or emulator :
 
 ```
-> apk
+> start
 [info] Generated /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/src_managed/main/AndroidManifest.xml
 [info] Running AAPT for package com.scratch
 [info] Wrote /Users/fx/Documents/Projects/android-scratch/target/scala-2.10/src_managed/main/scala/com/scratch/TR.scala
@@ -247,12 +248,9 @@ Preparing output jar [/Users/fx/Documents/Projects/android-scratch/target/classe
   Copying resources from program jar [/Users/fx/.sbt/boot/scala-2.10.1/lib/scala-library.jar] (filtered)
 [info] Dexing /Users/fx/Documents/Projects/android-scratch/target/classes-scratch-compile-0.1.dex
 [info] Packaging /Users/fx/Documents/Projects/android-scratch/target/scratch-compile-0.1.apk
+[info] Installing scratch-compile-0.1.apk
 [success] Total time: 32 s, completed Jun 2, 2013 5:00:22 PM
 >
 ```
 
-Our app is now packaged at `target/scratch-compile-0.1.apk`. Isn't that great?
-
-If you have an emulator running or a connected device, just run `start` to
-start the app, which will automatically build a package, upload it to your
-device and run the app!
+_**Note:** You can run the SBT command `emulator-start <avd-name>` to start an emulator._
