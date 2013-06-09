@@ -99,19 +99,20 @@ Android Ant layout, here are the corresponding directories for SBT :
   * Put your native (`.so`) libraries in `src/main/libs`
   * Put your manifest in `src/main/AndroidManifest.xml`
 
+_**Note:** Every path is relative to the `scratch` directory we just created,
+unless explicitely specified._
+
 Then, you may add the Android plugin in `project/plugins.sbt` :
 
 ```scala
-addSbtPlugin("org.scala-sbt" % "sbt-android-plugin" % "0.7-SNAPSHOT")
+addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.7-SNAPSHOT")
 ```
 
 Add some information about your app in `build.sbt` :
 
-_(Note: Having one line between each setting is required by the SBT syntax)_ :
-
 ```scala
 // Include the Android plugin
-androidDefault
+androidDefaults
 
 // Name of your app
 name := "Scratch"
