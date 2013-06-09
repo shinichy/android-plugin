@@ -109,7 +109,7 @@ are the most important parts :
 The plugin uses a lot of secondary settings and tasks, but these are the main
 ones.
 
-# The classpath
+# Classpath and library depndencies
 
 The _classpath_ is a set of class files loaded by a Java or Dalvik VM.
 
