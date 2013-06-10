@@ -45,8 +45,8 @@ restart, because it doesn't refresh your new build settings automatically.
 In SBT's interactive prompt, just run the `release` command.
 
 _**Note:** Your password will be displayed in plain text on your screen, so don't do
-this in a crowded room or anything. (If `sign` fails with
-"sign-release: Nonzero exit value", try an alias without a '-')_
+this in a crowded room or anything. (If `release` fails with
+`Nonzero exit value`, try an alias without a `-`)_
 
 In the text that `release` outputs to the console, you will see the path to the
 APK file that you can upload to the Play Store. It's in the `target/` folder
