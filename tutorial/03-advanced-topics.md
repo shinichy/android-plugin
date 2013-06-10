@@ -191,9 +191,12 @@ request!_
 
 The new Android Build System uses Gradle instead of Ant to build Android apps.
 
-SBT and Gradle projects have a very similar layout, so it should be pretty easy
-to write Gradle build scripts that run on SBT directory structures. However,
-the Android and Scala plugins do not play (yet?) nice together.
+Running SBT-Android on a Gradle project is easy : drop the simple `build.sbt`
+and `plugins.sbt` files we created earlier, add dependencies, and you're pretty
+much set.
+
+Running Gradle on a SBT-Android project should be pretty easy as well, but the
+Android and Scala Gradle plugins do not play (yet?) nice together.
 
 See [this discussion](https://groups.google.com/forum/#!topic/adt-dev/1a5cAuSuOkg)
 for more information.
