@@ -127,8 +127,7 @@ included-classpath` and `show provided-classpath` commands :
 
 ```
 > show included-classpath
-[info] List(.../android-scratch/target/scala-2.10/classes,
-            .../scala-library.jar)
+[info] List(.../scala-library.jar)
 
 > show provided-classpath
 [info] List(.../android.jar)
