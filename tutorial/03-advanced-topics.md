@@ -131,7 +131,7 @@ Android IntelliJ projects from SBT.
 Just run the `gen-idea` command to generate an IntelliJ project :
 
 ```bash
-> sbt gen-idea                                                                                                                                          master [f5a30a9] modified
+> sbt gen-idea
 [info] Loading project definition from .../scratch/project
 [info] Set current project to Scratch (in build file:.../scratch/)
 [info] Creating IDEA module for project 'Scratch' ...
@@ -211,10 +211,10 @@ Options**, then **Root access**, and allow access to ADB :
 ![Allow access to ADB](images/DevOptions-Root.png)
 
 Emulator AVD images are rooted by default, but make sure you aren't using a
-modified system image the system image before preloading. SBT-Android _will_
-overwrite it. Newly created AVDs should be fine. Also, during preloading,
-SBT-Android will _kill any running emulator_ to make sure the process can
-complete safely, so you probably should shut them down yourself.
+modified system image before preloading. SBT-Android _will_ overwrite it. Newly
+created AVDs should be fine. Also, during preloading, SBT-Android will _kill
+any running emulator_ to make sure the process can complete safely, so you
+probably should shut them down yourself.
 
 Once you meet the above requirements, start a SBT command prompt and run either :
 
