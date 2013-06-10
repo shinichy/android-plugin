@@ -254,4 +254,30 @@ Preparing output jar [/Users/fx/Documents/Projects/android-scratch/target/classe
 >
 ```
 
-_**Note:** You can run the SBT command `emulator-start <avd-name>` to start an emulator._
+_**Note:** You can run the SBT command `emulator-start <avd-name>` to start an
+emulator._
+
+_**Note:** If you just want to generate an APK package, use the `apk` task
+instead of `start`._
+
+The default behavior of `start` is to use the first device/emulator it finds.
+If that is not suitable, you can set the ADB target by using one of these
+settings :
+
+```
+adbTarget := Target.Auto        -- Use the first available target
+adbTarget := Target.Device      -- Use the first available device
+adbTarget := Target.Emulator    -- Use the first available emulator
+adbTarget := Target.UID("uid")  -- Use a target matching the given UID
+```
+
+Use the `set` SBT command to set them while running SBT. For example :
+
+```
+> set adbTarget := Target.Emulator
+[info] Defining *:adb-target
+[info] Reapplying settings...
+[info] Set current project to Scratch (in ...
+
+> start    -- Will use "adb -e" to select an emulator
+```
