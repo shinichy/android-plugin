@@ -177,11 +177,26 @@ configure the Android target. It has to be called something like **Android
 
 # Eclipse integration
 
-_(Upcoming)_
+There's a _giter8_ template that can generate Eclipse projects correctly, but
+it's been a while since I've updated it.
+
+Try the `sbt-android-0.7` branch of
+[fxthomas/android-app.g8](https://github.com/fxthomas/android-app.g8) : it
+compiles correctly, but hasn't been tested a lot.
+
+_If you ever manage to improve Eclipse support, let us know by a mail or a pull
+request!_
 
 # Gradle integration
 
-_(Upcoming)_
+The new Android Build System uses Gradle instead of Ant to build Android apps.
+
+SBT and Gradle projects have a very similar layout, so it should be pretty easy
+to write Gradle build scripts that run on SBT directory structures. It's not
+automated yet, but planned.
+
+_If you improve Gradle support by yourself, let us know by a mail or a pull
+request!_
 
 # Preloading libraries
 
