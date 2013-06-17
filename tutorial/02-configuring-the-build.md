@@ -79,11 +79,12 @@ are the most important parts :
 
   1. It first runs _source generators_ such as the `aapt` and `aidl` commands
      to parse resources and generate, among others, `R.java` files, and extracts
-     ApkLib dependencies.
+     ApkLib and AAR dependencies.
 
      Generated sources end up in `target/scala-2.10/src_managed`, while ApkLib
-     dependencies have their own managed folder in
-     `target/scala-2.10/apklib_managed`.
+     and AAR libraries dependencies have their own managed folders in
+     `target/scala-2.10/apklib_managed` and `target/scala-2.10/aarlib_managed`,
+     respectively.
 
      You can show every managed source file by typing `show managed-sources` in
      SBT.
@@ -108,6 +109,9 @@ are the most important parts :
 
 The plugin uses a lot of secondary settings and tasks, but these are the main
 ones.
+
+Optionally, you can also generate an ApkLib from your project by running the
+`apklib-package` task.
 
 # Classpath and library depndencies
 
@@ -156,17 +160,21 @@ _**Note:** For those unfamiliar with it, I recommend looking at
 [MVNRepository](http://mvnrepository.com). Package maintainers usually include
 the right information on their project page._
 
-## Using ApkLib dependencies
+## Using ApkLib and AAR dependencies
 
 ApkLib are Maven dependencies that can include Android resources, unlike
 regular JARs. Popular Android libraries, such as
 [ActionBarSherlock](http://www.actionbarsherlock.com), are distributed that
 way.
 
-To include such a dependency, use the `apklib` helper function :
+AAR libraries are the library packages used in the new Google build system,
+based on Gradle.
+
+To include such a dependency, use the `apklib` and `aarlib` helper functions :
 
 ```scala
 libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4.2.0")
+libraryDependencies += aarlib("com.google.android.gms" % "play-services" % "3.1.36")
 ```
 
 # Using Proguard
