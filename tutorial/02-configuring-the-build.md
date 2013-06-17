@@ -113,6 +113,43 @@ ones.
 Optionally, you can also generate an ApkLib from your project by running the
 `apklib-package` task.
 
+# Building standard Java projects
+
+Standard (Ant) Java projects have a different layout from the one
+SBT-Android and Gradle use.
+
+The directory layout usually looks like this :
+
+```
+| src
+   | com
+      | yourpackage
+         | Activity.java
+         ...
+| res
+   | layout
+   | drawable
+   | xml
+   ...
+| assets
+| AndroidManifest.xml
+...
+```
+
+To build such a project with the plugin, use the `androidJavaLayout` additional settings in your `build.sbt` file :
+
+```scala
+// Default Android settings
+androidDefaults
+
+// Use the Java layout
+androidJavaLayout
+
+// Configure the project
+name := "YourProject"
+...
+```
+
 # Classpath and library depndencies
 
 The _classpath_ is a set of class files loaded by a Java or Dalvik VM.
