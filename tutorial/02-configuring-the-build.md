@@ -222,16 +222,21 @@ Here are a few additional Proguard options :
 
   * **`proguardOptions`**: Additional Proguard options.
 
-    The plugin automatically generates options for your main classes, but you may
-    need it if you use additional libraries. Example :
+    The plugin automatically generates options for your main classes, but you
+    may need it if you use additional libraries, use reflection or allocate
+    classes dynamically. Example :
 
     ```scala
-    proguardOptions += "-keep class com.actionbarsherlock.** { *; }"
+    proguardOptions += "-keep class com.yourpackage.Klass { *; }"
     ```
+
+    Refer to the [ProGuard
+    documentation](http://proguard.sourceforge.net/index.html#manual/usage.html)
+    for more information about which rules you can use.
 
     _**Note:** The `+=` operator adds an option to a list setting key._
 
-    _**Warning:** `NoSuchMethodError` errors in your LogCat are often a sign
+    _**Note:** `NoSuchMethodError` errors in your LogCat are often a sign
     that you need to add ProGuard rules._
 
   * **`proguardConfiguration`**: Path to the generated Proguard configuration.
