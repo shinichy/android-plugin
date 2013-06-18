@@ -210,7 +210,7 @@ based on Gradle.
 To include such a dependency, use the `apklib` and `aarlib` helper functions :
 
 ```scala
-libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4.2.0")
+libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4.3.1")
 libraryDependencies += aarlib("com.google.android.gms" % "play-services" % "3.1.36")
 ```
 
@@ -226,10 +226,13 @@ Here are a few additional Proguard options :
     need it if you use additional libraries. Example :
 
     ```scala
-    proguardOptions += "-keep class org.scaloid.** { *; }"
+    proguardOptions += "-keep class com.actionbarsherlock.** { *; }"
     ```
 
     _**Note:** The `+=` operator adds an option to a list setting key._
+
+    _**Warning:** `NoSuchMethodError` errors in your LogCat are often a sign
+    that you need to add ProGuard rules._
 
   * **`proguardConfiguration`**: Path to the generated Proguard configuration.
 
