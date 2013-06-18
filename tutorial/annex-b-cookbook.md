@@ -10,7 +10,86 @@ pull requests or the mailing list!
 
 Unless specified, all code snippets are to be added to `build.sbt`.
 
-# Building a regular (Ant) Java Project
+# Commonly used dependencies
+
+## Google repositories
+
+These settings add some useful Google libraries (Play Services,...) to your
+project.
+
+Starting from SDK r22, these dependencies are bundled within the SDK components
+called *Google Repository* and *Android Support Repository*, and SBT-Android is
+setup to use them automatically.
+
+```scala
+// Google Play services
+libraryDependencies += aarlib("com.google.android.gms" % "play-services" % "3.1.36")
+
+// Support v4
+libraryDependencies += "com.google.android.support" % "support-v4" % "13.0.0"
+
+// Support v13
+libraryDependencies += "com.google.android.support" % "support-v13" % "13.0.0"
+
+// GridLayout v7
+libraryDependencies += "com.google.android.support" % "gridlayout-v7" % "13.0.0"
+```
+
+## Google SDK add-ons
+
+Libraries that are provided by Android (Maps,...) need to be specified with
+`<uses-sdk>` in your manifest.
+
+Then, use the corresponding setting keys to add them as provided dependencies :
+
+```scala
+// Google Maps Library
+androidGoogleMapsLibrary
+
+// Effects Library
+androidEffectsLibrary
+
+// USB Host Library
+androidUSBHostLibrary
+```
+
+## ActionBarSherlock
+
+Add this to your configuration :
+
+```scala
+// ActionBarSherlock
+libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4.3.1")
+
+// Keep ActionBarSherlock classes
+proguardOptions += "-keep classes com.actionbarsherlock.** { *; }"
+```
+
+## Scaloid
+
+```scala
+// Scaloid
+libraryDependencies += "org.scaloid" % "scaloid_2.10" % "2.0.16-SNAPSHOT"
+```
+
+_**Note:** Preloading doesn't work with Scaloid 2.0 yet. Stick to the default
+configuration with ProGuard enabled and you should be fine._
+
+# Build configuration
+
+## Logging level
+
+By default, SBT only logs errors, warnings and information messages. Telling it
+to go a little further and output debug messages can help, in particular if you
+want to see the commands executed or some additional information.
+
+Just run this command in the SBT console :
+
+```scala
+> set logLevel in Global := Level.Debug
+```
+
+## Building regular projects
 
 Instead of having everything under `src/main` (like SBT or Gradle do), regular
 Ant Java layouts put everything on the root of the project, and the sources in
@@ -20,39 +99,28 @@ Ant Java layouts put everything on the root of the project, and the sources in
 androidJavaLayout
 ```
 
-# Using Google repositories
+_**Note:** This is the old build system, soon to be replaced by Gradle, which
+uses more or less the same directory structure as SBT. This setting is only
+provided for convenience for existing projects._
 
-These settings add some Google libraries (Play Services,...) to your project.
+## Why are you keeping?
 
-```scala
-// Support library
-libraryDependencies += "com.google.android" % "support-v4" % "r7"
-```
-
-```scala
-// Google Play services
-libraryDependencies += aarlib("com.google.android.gms" % "play-services" % "3.1.36")
-```
-
-# Using provided Google libraries
-
-Libraries that are provided by Android (Maps,...) need to be specified with
-`<uses-sdk>` in your manifest.
-
-Then, use the corresponding setting keys to add them as provided dependencies :
+In some cases, you will want to ask ProGuard why it is keeping a given class.
+You can use the `-whyareyoukeeping` swtich like this :
 
 ```scala
-// Google Maps
-// TODO: Add a setting key to add them to unmanagedJars
+proguardOptions += "-whyareyoukeeping class com.mypackage.MyKlass"
 ```
 
-# Using ActionBarSherlock
-
-Add this to your configuration :
+You might also want to use `-printseeds` (refer to the documentation). This
+prints the seeds to a file called `seeds.txt` at the root of your project :
 
 ```scala
-// ActionBarSherlock
-libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4.3.1")
+proguardOptions <+= (baseDirectory) (p => "-printseeds " + (p / "seeds.txt").getAbsolutePath)
 ```
 
-# Using Scaloid
+After changing the ProGuard options, `clean` and rebuild to see the requested
+informations and print the seeds.
+
+_**Note:** In my experience, this makes ProGuard run much slower than usual, so
+keep it for debugging hard cases!_
