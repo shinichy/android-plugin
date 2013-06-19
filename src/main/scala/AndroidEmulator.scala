@@ -15,18 +15,14 @@ object AndroidEmulator {
       ()
     }
 
-  private def listDevicesTask: Project.Initialize[Task[Unit]] = (dbPath) map {
-    _ +" devices" !
-  }
+  private def listDevicesTask = Def.task { dbPath.value + " devices" !; () }
 
-  private def killAdbTask: Project.Initialize[Task[Unit]] = (dbPath) map {
-    _ +" kill-server" !
-  }
+  private def killAdbTask = Def.task { dbPath.value +" kill-server" !; () }
 
-  private def emulatorStopTask = (dbPath, streams) map { (dbPath, s) =>
-    s.log.info("Stopping emulators")
-    val serial = "%s -e get-serialno".format(dbPath).!!
-    "%s -s %s emu kill".format(dbPath, serial).!
+  private def emulatorStopTask = Def.task {
+    streams.value.log.info("Stopping emulators")
+    val serial = "%s -e get-serialno".format(dbPath.value).!!
+    "%s -s %s emu kill".format(dbPath.value, serial).!
     ()
   }
 

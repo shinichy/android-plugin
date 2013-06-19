@@ -193,15 +193,11 @@ object AndroidBase {
     }
     }
 
-  private def aaptGenerateTask =
-    (manifestPackage, aaptPath, manifestPath, resPath, libraryJarPath, managedJavaPath,
-     generatedProguardConfigPath, aarlibDependencies, apklibDependencies, apklibSourceManaged, streams, useDebug) map {
+  private def aaptGenerateTask = Def.task {
 
-    (mPackage, aPath, mPath, rPath, jarPath, javaPath, proGen, aarlibs, apklibs, apklibJavaPath, s, useDebug) =>
+    val libraryResPathArgs = resPath.value.flatMap(p => Seq("-S", p.absolutePath))
 
-    val libraryResPathArgs = rPath.flatMap(p => Seq("-S", p.absolutePath))
-
-    val extlibs = apklibs ++ aarlibs
+    val extlibs = apklibDependencies.value ++ aarlibDependencies.value
 
     val libraryAssetPathArgs = for (
       lib <- extlibs;
@@ -210,14 +206,15 @@ object AndroidBase {
     ) yield arg
 
     def runAapt(`package`: String, outJavaPath: File, args: String*) {
-      s.log.info("Running AAPT for package " + `package`)
+      streams.value.log.info("Running AAPT for package " + `package`)
 
-      val aapt = Seq(aPath.absolutePath, "package", "--auto-add-overlay", "-m",
+      val aapt = Seq(aaptPath.value.absolutePath,
+        "package", "--auto-add-overlay", "-m",
         "--custom-package", `package`,
-        "-M", mPath.head.absolutePath,
-        "-I", jarPath.absolutePath,
+        "-M", manifestPath.value.head.absolutePath,
+        "-I", libraryJarPath.value.absolutePath,
         "-J", outJavaPath.absolutePath,
-        "-G", proGen.absolutePath) ++
+        "-G", generatedProguardConfigPath.value.absolutePath) ++
         args ++
         libraryResPathArgs ++
         libraryAssetPathArgs
@@ -226,13 +223,14 @@ object AndroidBase {
     }
 
     // Run aapt to generate resources for the main package
-    runAapt(mPackage, javaPath)
+    runAapt(manifestPackage.value, managedJavaPath.value)
 
     // Run aapt to generate resources for each apklib dependency
-    apklibs.foreach(lib => runAapt(lib.pkgName, apklibJavaPath, "--non-constant-id"))
+    apklibDependencies.value.foreach(lib =>
+      runAapt(lib.pkgName, apklibSourceManaged.value, "--non-constant-id"))
 
     def createBuildConfig(`package`: String) = {
-      var path = javaPath
+      var path = managedJavaPath.value
       `package`.split('.').foreach { path /= _ }
       path.mkdirs
       val buildConfig = path / "BuildConfig.java"
@@ -240,14 +238,14 @@ object AndroidBase {
         package %s;
         public final class BuildConfig {
           public static final boolean DEBUG = %s;
-        }""".format(`package`, useDebug))
+        }""".format(`package`, useDebug.value))
       buildConfig
     }
 
-    (javaPath ** "R.java" get) ++
-    (apklibJavaPath ** "R.java" get) ++
-      Seq(createBuildConfig(mPackage)) ++
-      apklibs.map(lib => createBuildConfig(lib.pkgName))
+    (managedJavaPath.value ** "R.java" get) ++
+    (apklibSourceManaged.value ** "R.java" get) ++
+      Seq(createBuildConfig(manifestPackage.value)) ++
+      apklibDependencies.value.map(lib => createBuildConfig(lib.pkgName))
   }
 
   private def aidlGenerateTask =
@@ -294,7 +292,7 @@ object AndroidBase {
   /**
    * Returns the internal dependencies for the "provided" scope only
    */
-  def providedInternalDependenciesTask(proj: ProjectRef, struct: Load.BuildStructure) = {
+  def providedInternalDependenciesTask(proj: ProjectRef, struct: BuildStructure) = {
     // "Provided" dependencies of a ResolvedProject
     def providedDeps(op: ResolvedProject): Seq[ProjectRef] = {
       op.dependencies

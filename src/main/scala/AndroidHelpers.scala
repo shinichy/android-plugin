@@ -84,18 +84,17 @@ object AndroidHelpers {
    * Returns the name of the app's main activity.
    */
   def launcherActivity(schema: String, amPath: File, mPackage: String) = {
+
     val launcher = for (
-         activity <- (manifest(amPath) \\ "activity");
-         action <- (activity \\ "action");
-         val name = action.attribute(schema, "name").getOrElse(sys.error{
-            "action name not defined"
-          }).text;
-         if name == "android.intent.action.MAIN"
+      activity <- (manifest(amPath) \\ "activity");
+      action <- (activity \\ "action");
+      name <- action.attribute(schema, "name")
+      if name == "android.intent.action.MAIN"
     ) yield {
-      val act = activity.attribute(schema, "name").getOrElse(sys.error("activity name not defined")).text
-      if (act.contains(".")) act else mPackage+"."+act
+      if (name.text.contains(".")) name.text else mPackage + "." + name.text
     }
-    launcher.headOption.getOrElse("")
+
+    launcher.headOption.getOrElse(sys.error("Cannot find main activity"))
   }
 
   /**

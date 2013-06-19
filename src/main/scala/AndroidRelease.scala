@@ -7,30 +7,31 @@ import AndroidPlugin._
 
 object AndroidRelease {
 
-  def zipAlignTask: Project.Initialize[Task[File]] =
-    (zipAlignPath, packageApkPath, packageAlignedPath, streams) map { (zip, apkPath, pPath, s) =>
+  def zipAlignTask = Def.task {
       val zipAlign = Seq(
-          zip.absolutePath,
+          zipAlignPath.value.absolutePath,
           "-v", "4",
-          apkPath.absolutePath,
-          pPath.absolutePath)
-      s.log.debug("Aligning "+zipAlign.mkString(" "))
-      s.log.debug(zipAlign !!)
-      s.log.info("Aligned "+pPath)
-      pPath
+          packageApkPath.value.absolutePath,
+          packageAlignedPath.value.absolutePath)
+
+      streams.value.log.debug("Aligning " + zipAlign.mkString(" "))
+      streams.value.log.debug(zipAlign !!)
+      streams.value.log.info("Aligned " + packageAlignedPath.value)
+      packageAlignedPath.value
     }
 
-   def signReleaseTask: Project.Initialize[Task[File]] =
-    (keystorePath, keyalias, packageApkPath, streams, cachePasswords) map { (ksPath, ka, pPath, s, cache) =>
+   def signReleaseTask = Def.task {
       val jarsigner = Seq(
         "jarsigner",
         "-verbose",
-        "-keystore", ksPath.absolutePath,
+        "-keystore", keystorePath.value.absolutePath,
         "-storepass", PasswordManager.get(
-              "keystore", ka, cache).getOrElse(sys.error("could not get password")),
-        pPath.absolutePath,
-        ka)
-      s.log.debug("Signing "+jarsigner.mkString(" "))
+          "keystore", keyalias.value, cachePasswords.value).getOrElse(
+            sys.error("could not get password")),
+        packageApkPath.value.absolutePath,
+        keyalias.value)
+
+      streams.value.log.debug("Signing " + jarsigner.mkString(" "))
       val out = new StringBuffer
       val exit = jarsigner.run(new ProcessIO(input => (),
                             output => out.append(IO.readStream(output)),
@@ -38,9 +39,9 @@ object AndroidRelease {
                             inheritedInput => false)
                         ).exitValue()
       if (exit != 0) sys.error("Error signing: "+out)
-      s.log.debug(out.toString)
-      s.log.info("Signed "+pPath)
-      pPath
+      streams.value.log.debug(out.toString)
+      streams.value.log.info("Signed " + packageApkPath.value)
+      packageApkPath.value
     }
 
   private def releaseTask = (packageAlignedPath, streams) map { (path, s) =>
