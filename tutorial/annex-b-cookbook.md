@@ -40,18 +40,12 @@ libraryDependencies += "com.google.android.support" % "gridlayout-v7" % "13.0.0"
 Libraries that are provided by Android (Maps,...) need to be specified with
 `<uses-sdk>` in your manifest.
 
-Then, use the corresponding setting keys to add them as provided dependencies :
+As far as I know, unless you find a specific version in your Maven repository,
+you have to find the right library JAR in your SDK path, and manually copy it
+to your project's `lib/` folder.
 
-```scala
-// Google Maps Library
-androidGoogleMapsLibrary
-
-// Effects Library
-androidEffectsLibrary
-
-// USB Host Library
-androidUSBHostLibrary
-```
+These libraries usually are in (for platform version 16, YMMV) :
+`${ANDROID_SDK_HOME}/add-ons/addon-google_apis-google-16/libs`
 
 ## ActionBarSherlock
 
