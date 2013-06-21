@@ -92,37 +92,6 @@ We use a few methods that may need explanation :
 
   * `settings` is a method of a `Project` object that defines additional settings.
 
-# Using the NDK
-
-For now, the NDK (Native Development Kit) settings are not included by default, as most people probably
-won't use it.
-
-To start using it, just add the `androidNdk` setting key to your `build.sbt`
-file or `build.scala` project.
-
-Then, set the `jniClasses` key to include the classes that have JNI methods, such as :
-
-```scala
-jniClasses += "com.scratch.MyClassWithNative"
-```
-
-By default, SBT-Android generates one header per Java class. You can set the
-path to a single generated header file with the `javahOutputFile` key :
-
-```scala
-javahOutputFile := Some(new File("native.h"))
-```
-
-The make environment variable `SBT_MANAGED_JNI_INCLUDE` can be used to refer to
-the directory containing the generated header files :
-
-```makefile
-# Android.mk
-LOCAL_C_INCLUDES += \
-        ... \
-        $(SBT_MANAGED_JNI_INCLUDE)
-```
-
 # IntelliJ integration
 
 [SBT-Idea](https://github.com/mpeltonen/sbt-idea) can be used to generate

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 4. Preparing a release
+title: 5. Preparing a release
 subtitle: Setting your app live!
 ---
 
