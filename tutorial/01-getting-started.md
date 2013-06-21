@@ -95,9 +95,8 @@ Android Ant layout, here are the corresponding directories for SBT :
   * Put your Scala sources in `src/main/scala`
   * Put your resources in `src/main/res`
   * Put your assets in `src/main/assets`
-  * Put your JAR libraries in `lib` _(SBT will automatically add them to the classpath)_
-  * Put your native (`.so`) libraries in `src/main/libs`
   * Put your manifest in `src/main/AndroidManifest.xml`
+  * Put your JAR and native libraries in `lib`
 
 _**Note:** Every path is relative to the `scratch` directory we just created,
 unless explicitely specified._
