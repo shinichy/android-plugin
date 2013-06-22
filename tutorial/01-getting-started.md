@@ -16,7 +16,7 @@ them.
 
 Scala is quite close to Java, and you can freely mix Java and Scala code if you
 wish. Although it's recommended you at least know a little bit of Scala before
-starting, you don't really need to know Scala or SBT ([_Simple Build
+starting, you don't really need to know Scala or SBT ([_Scala Build
 Tool_](http://www.scala-sbt.org), which we use to build Scala apps) to follow
 this tutorial, so we'll try to explain the most commonly-used commands and
 features.
