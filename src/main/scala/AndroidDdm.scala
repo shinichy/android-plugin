@@ -181,8 +181,7 @@ object AndroidDdm {
     def toOutputStream(format: String, o: OutputStream) = ImageIO.write(r, format, o)
   }
 
-  def printStackTask = (parsed: TaskKey[String]) =>
-    (parsed, streams) map { (p, s) =>
+  def printStackTask(p: String, s: TaskStreams) = {
       def doPrint(tinfo: ThreadInfo, includeStack: Boolean) {
         def status (ti: ThreadInfo) = {
           val colorize = (s: String) => s match {
@@ -209,11 +208,13 @@ object AndroidDdm {
       ()
     }
 
-  def threadListParser = (s: State, app: String, path: String, emu: Boolean) => {
-    fetchThreads(app, path, emu)
-    Space ~> infos.map({ case (k, v) => token(k) })
-                    .reduceLeftOption(_ | _)
-                    .getOrElse(token("<name>"))
+  def threadListParser(pack: String, emu: Boolean) = Def.setting {
+    (state: State) => {
+      fetchThreads(pack, dbPath.value.absolutePath, emu)
+      Space ~> infos.map({ case (k, v) => token(k) })
+                      .reduceLeftOption(_ | _)
+                      .getOrElse(token("<name>"))
+    }
   }
 
   lazy val settings: Seq[Setting[_]] = (Seq (
@@ -229,15 +230,14 @@ object AndroidDdm {
     hprofDevice <<= (manifestPackage, dbPath, streams, toolsPath) map { (m,p,s, toolsPath) =>
       dumpHprof(m, p.absolutePath, false, s)(writeHprof(toolsPath))
     },
-    threadsEmulator <<= InputTask(
-        (resolvedScoped, dbPath) ( (ctx, path) => (s: State) =>
-        threadListParser(s, loadFromContext(manifestPackageName, ctx, s) getOrElse "", path.absolutePath, true)))
-        (printStackTask),
 
-    threadsDevice <<= InputTask(
-        (resolvedScoped, dbPath) ( (ctx, path) => (s: State) =>
-        threadListParser(s, loadFromContext(manifestPackageName, ctx, s) getOrElse "", path.absolutePath, false)))
-        (printStackTask),
+    threadsEmulator := Def.inputTask {
+      printStackTask(threadListParser(manifestPackageName.value, true).parsed, streams.value)
+    },
+
+    threadsDevice := Def.inputTask {
+      printStackTask(threadListParser(manifestPackageName.value, false).parsed, streams.value)
+    },
 
     stopBridge <<= (streams) map { (s) =>
       terminateBridge()

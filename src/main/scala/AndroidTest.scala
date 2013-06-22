@@ -13,6 +13,15 @@ import com.android.ddmlib.testrunner.{InstrumentationResultParser,ITestRunListen
 
 object AndroidTest {
 
+  def testParser(tests:Seq[String]) = Def.setting {
+    (state: State) => {
+      Space ~> tests.map(t => token(t))
+                    .reduceLeftOption(_ | _)
+                    .getOrElse(token(NotSpace))
+    }
+  }
+
+
   /**
    * Test settings
    */
@@ -20,8 +29,15 @@ object AndroidTest {
     (Seq (
       testRunner <<= detectTestRunnerTask,
       test       <<= instrumentationTestAction dependsOn install,
-      testOnly   <<= InputTask(loadForParser(definedTestNames in Test)( (s, i) => testParser(s, i getOrElse Nil))) { test =>
-        runSingleTest(test)
+      testOnly   := Def.inputTask {
+        runSingleTest(
+          testParser((definedTestNames in Test).value).parsed,
+          adbTarget.value,
+          dbPath.value,
+          manifestPackage.value,
+          testRunner.value,
+          streams.value
+        )
       }
     ))
 
@@ -58,9 +74,13 @@ object AndroidTest {
   /**
    * Task for starting a single test on a target
    */
-  val runSingleTest = (test: TaskKey[String]) =>
-      (adbTarget, test, dbPath, manifestPackage, testRunner, streams) map {
-      (adbTarget, test, dbPath, manifestPackage, testRunner, s) =>
+  def runSingleTest(
+    test: String,
+    adbTarget: AndroidTarget,
+    dbPath: File,
+    manifestPackage: String,
+    testRunner: String,
+    s: TaskStreams) = {
 
       // Run instrumentation tests
       val (exit, out) = adbTarget.testApp(dbPath, manifestPackage, testRunner, Some(test))
@@ -73,7 +93,7 @@ object AndroidTest {
 
       // Return Unit
       ()
-  }
+    }
 
   /**
    * Parse the test results and display them to the user
@@ -87,11 +107,6 @@ object AndroidTest {
       None
     }
   }
-
-  def testParser(s: State, tests:Seq[String]): Parser[String] =
-    Space ~> tests.map(t => token(t))
-                  .reduceLeftOption(_ | _)
-                  .getOrElse(token(NotSpace))
 
   class TestListener(log: Logger) extends ITestRunListener {
     import com.android.ddmlib.testrunner.TestIdentifier

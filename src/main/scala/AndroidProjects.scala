@@ -48,7 +48,7 @@ object AndroidProjects {
       aggregate: => Seq[ProjectReference] = Nil,
       dependencies: => Seq[ClasspathDep[ProjectReference]] = Nil,
       delegates: => Seq[ProjectReference] = Nil,
-      settings: => Seq[sbt.Project.Setting[_]] = Seq.empty,
+      settings: => Seq[sbt.Def.Setting[_]] = Seq.empty,
       configurations: Seq[Configuration] = Configurations.default
     ) = Project(id,
                 base,
@@ -144,7 +144,7 @@ object AndroidProjects {
       aggregate: => Seq[ProjectReference] = Nil,
       dependencies: => Seq[ClasspathDep[ProjectReference]] = Nil,
       delegates: => Seq[ProjectReference] = Nil,
-      settings: => Seq[sbt.Project.Setting[_]] = Seq.empty,
+      settings: => Seq[sbt.Def.Setting[_]] = Seq.empty,
       configurations: Seq[Configuration] = Configurations.default
     ) = Project(id,
                 base,
