@@ -112,7 +112,7 @@ Plugin definitions go in `project/plugins.sbt` :
 addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.7-SNAPSHOT")
 ```
 
-App configuration go in `build.sbt` :
+App configuration goes in `build.sbt` :
 
 ```scala
 // Include the Android plugin
