@@ -76,6 +76,21 @@ play with it right now, clone
 [fxthomas/android-scratch](https://github.com/fxthomas/android-scratch.git) and
 skip to the next section.
 
+SBT-Android closely follows the Gradle structure :
+
+  * Put your Java sources in `src/main/java`
+  * Put your Scala sources in `src/main/scala`
+  * Put your resources in `src/main/res`
+  * Put your assets in `src/main/assets`
+  * Put your manifest in `src/main/AndroidManifest.xml`
+  * Put your JAR libraries in `libs`
+  * Put your native (`.so`) libraries in `lib`
+
+Typical Gradle projects are expected to build and run out of the box by just
+editing the SBT configuration.
+
+-----------
+
 So, without further ado, open a Terminal, and create the directory structure :
 
 ```bash
@@ -88,26 +103,16 @@ touch build.sbt                # Build configuration
 touch project/plugins.sbt      # SBT Plugins
 ```
 
-If you already have an existing source for some project following the standard
-Android Ant layout, here are the corresponding directories for SBT :
-
-  * Put your Java sources in `src/main/java`
-  * Put your Scala sources in `src/main/scala`
-  * Put your resources in `src/main/res`
-  * Put your assets in `src/main/assets`
-  * Put your manifest in `src/main/AndroidManifest.xml`
-  * Put your JAR and native libraries in `lib`
-
 _**Note:** Every path is relative to the `scratch` directory we just created,
 unless explicitely specified._
 
-Then, you may add the Android plugin in `project/plugins.sbt` :
+Plugin definitions go in `project/plugins.sbt` :
 
 ```scala
 addSbtPlugin("org.scala-sbt" % "sbt-android" % "0.7-SNAPSHOT")
 ```
 
-Add some information about your app in `build.sbt` :
+App configuration go in `build.sbt` :
 
 ```scala
 // Include the Android plugin
