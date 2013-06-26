@@ -150,7 +150,7 @@ name := "YourProject"
 ...
 ```
 
-# Classpath and library depndencies
+# Depndencies
 
 The _classpath_ is a set of class files loaded by a Java or Dalvik VM.
 
@@ -214,7 +214,7 @@ libraryDependencies += apklib("com.actionbarsherlock" % "actionbarsherlock" % "4
 libraryDependencies += aarlib("com.google.android.gms" % "play-services" % "3.1.36")
 ```
 
-# Using Proguard
+# Proguard
 
 As we've seen before, Proguard can be turned on/off with the `useProguard` key.
 
