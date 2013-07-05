@@ -165,7 +165,7 @@ This is enough for SBT. You can now add the Android manifest file in
 </manifest>
 ```
 
-Add a layout file to describe the user interface :
+Add a layout file to describe the user interface in `src/main/res/layout/main.xml` :
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -181,7 +181,7 @@ Add a layout file to describe the user interface :
 </LinearLayout>
 ```
 
-And, finally, display "Hello, world!" on the main activity :
+And, finally, display "Hello, world!" on the main activity in `src/main/scala/ScratchActivity.scala` :
 
 ```scala
 package com.scratch

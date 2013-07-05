@@ -14,8 +14,27 @@ title: Android development in Scala
   <p>sbt-android-plugin is an extension for the Scala build tool <a href="https://github.com/harrah/xsbt/wiki">sbt</a> which
   aims to make it as simple as possible to get started with Scala on Android.</p>
 
-  <p>Together with <a href="https://github.com/n8han/giter8">giter8</a> you can create and build a simple Android Scala project in a
+  <p>Together with Git or <a href="https://github.com/n8han/giter8">giter8</a> you can create and build a simple Android Scala project in a
   matter of minutes.</p>
+
+<h2>Start exploring</h2>
+
+<p>Install the latest SBT-Android snapshot :</p>
+
+<div class="highlight"><pre>
+  git clone https://github.com/fxthomas/android-plugin
+  cd android-plugin
+  git checkout rewrite-cleanup
+  sbt publish-local
+</pre></div>
+
+<p>Start your app on a connected device or emulator :</p>
+
+<div class="highlight"><pre>
+  git clone https://github.com/fxthomas/android-scratch
+  cd android-scratch
+  sbt start
+</pre></div>
 
 <h2><a name="tutorial" class="anchor" href="#tutorial"><span class="octicon octicon-link"></span></a>Tutorial</h2>
 
